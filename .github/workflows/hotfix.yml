@@ -1,0 +1,40 @@
+name: "Hotfix — reutilización"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versión sin prefijo v, por ejemplo 1.0.3"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  hotfix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ejecutar la Action compartida
+        id: hotfix
+        uses: ./.github/actions/notify-and-tag
+        with:
+          version: ${{ inputs.version }}
+          environment: staging
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          create_tag: "true"
+
+      - name: Mostrar resultado
+        shell: bash
+        env:
+          TAG_NAME: ${{ steps.hotfix.outputs.tag_name }}
+          NOTES_FILE: ${{ steps.hotfix.outputs.release_notes }}
+        run: |
+          echo "Tag: $TAG_NAME"
+          echo "Notas: $NOTES_FILE"
