@@ -243,3 +243,20 @@ runs:
         echo ""
         echo "> Release notes disponibles en los **Artifacts** de este run."
       } >> "$GITHUB_STEP_SUMMARY"
+
+  - name: Agregar evidencia del laboratorio
+    shell: bash
+    env:
+      RELEASE_VERSION: ${{ inputs.version }}
+      RELEASE_ENVIRONMENT: ${{ inputs.environment }}
+    run: |
+      {
+        echo ""
+        echo "### Evidencia del ejercicio 02"
+        echo ""
+        echo "- Curso: Arquitectura de Soluciones Multinube"
+        echo "- Módulo: 5"
+        echo "- Versión evaluada: $RELEASE_VERSION"
+        echo "- Entorno seleccionado: $RELEASE_ENVIRONMENT"
+        echo "- Notificación: simulada"
+      } >> "$GITHUB_STEP_SUMMARY"
